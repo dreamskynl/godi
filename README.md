@@ -13,23 +13,29 @@ go get -u github.com/DreamSkyLL/godi@v1
 
 # Usage
 ```go
-	c := godi.New()
+// use container
 
-	if err := c.Register(&CatService{}, NewCatService, "NewCatService says hi", "NewCatService says bye"); err != nil {
-		t.Error(err)
-	}
+c := godi.New()
 
-    c.Say
+if err := c.Register(&CatService{}, NewCatService, "Meow hi", "Meow bye~"); err != nil {
+    panic(err)
+}
+
+catService := c.MustResolveAsInstance(&CatService{}).(CatService)
+
+catService.SayHi()
 ```
 ```go
+// service
+
 type ICatService interface {
 	SayHi()
 	SayBye()
 }
 
 type CatService struct {
-	hi string
-	bye  string
+	hi  string
+	bye string
 }
 
 func NewCatService(hi string, bye string) (ICatService, error) {
