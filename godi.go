@@ -9,6 +9,8 @@ type IGoDI interface {
 	Register(itemType interface{}, factory any, parameters ...interface{}) error
 	Unregister(itemType interface{})
 	Resolve(itemType interface{}) (interface{}, error)
+	MustResolve(itemType interface{}) interface{}
+	MustResolveAsInstance(itemType interface{}) interface{}
 }
 
 type Container struct {
@@ -89,4 +91,25 @@ func (c *Container) Resolve(itemType interface{}) (interface{}, error) {
 	}
 
 	return reflect.ValueOf(factory).Call(params)[0].Interface(), nil
+}
+
+func (c *Container) MustResolve(itemType interface{}) interface{} {
+	item, err := c.Resolve(itemType)
+	if err != nil {
+		panic(err)
+	}
+	return item
+}
+
+func (c *Container) MustResolveAsInstance(itemType interface{}) interface{} {
+	item, err := c.Resolve(itemType)
+	if err != nil {
+		panic(err)
+	}
+
+	if reflect.TypeOf(item).Kind() != reflect.Ptr {
+		panic(fmt.Errorf("invalid return type, expected pointer, got %s", reflect.TypeOf(item).Kind()))
+	}
+
+	return reflect.ValueOf(item).Elem().Interface()
 }

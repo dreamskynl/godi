@@ -96,3 +96,25 @@ func TestRegister(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+func TestMustResolve(t *testing.T) {
+	c := New()
+
+	if err := c.Register(&BuildingUnitService{}, NewBuildingUnitService, "BuildingUnitServicePtr says hello", "BuildingUnitServicePtr says goodbye"); err != nil {
+		t.Error(err)
+	}
+
+	b := c.MustResolve(&BuildingUnitService{}).(*BuildingUnitService)
+	(*b).SayHello()
+}
+
+func TestMustResolveAs(t *testing.T) {
+	c := New()
+
+	if err := c.Register(&BuildingUnitService{}, NewBuildingUnitService, "BuildingUnitServicePtr says hello", "BuildingUnitServicePtr says goodbye"); err != nil {
+		t.Error(err)
+	}
+
+	b := c.MustResolveAsInstance(&BuildingUnitService{}).(BuildingUnitService)
+	b.SayHello()
+}
