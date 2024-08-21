@@ -8,7 +8,7 @@ GoDI is a light weight yet easy-to-use IoC/DI container. It may replace the `ube
 
 # Install
 ```go
-go get -u github.com/DreamSkyLL/godi@latest
+go get -u github.com/dreamskynl/godi@latest
 ```
 
 # Usage
